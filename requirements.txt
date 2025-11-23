@@ -1,0 +1,11 @@
+pandas
+numpy
+matplotlib
+scikit-learn
+xgboost
+statsmodels
+pytest
+jupyter
+plotly
+mlflow==2.11.0
+joblib

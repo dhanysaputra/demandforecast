@@ -1,0 +1,75 @@
+name: Demand Forecasting CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # ---------------------------
+    # 1. Check out the Repository
+    # ---------------------------
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    # ---------------------------
+    # 2. Set up Python
+    # ---------------------------
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    # ---------------------------
+    # 3. Install Dependencies
+    # ---------------------------
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov nbconvert jupyter black flake8
+
+    # ---------------------------
+    # 4. Lint with flake8
+    # ---------------------------
+    - name: Run flake8 Linter
+      run: |
+        flake8 src --count --ignore=E501,W503 --show-source --statistics
+
+    # ---------------------------
+    # 5. Run Black formatter check
+    # ---------------------------
+    - name: Check code formatting with Black
+      run: |
+        black --check src
+
+    # ---------------------------
+    # 6. Execute Tests
+    # ---------------------------
+    - name: Run pytest
+      run: |
+        pytest --maxfail=1 --disable-warnings --cov=src --cov-report=xml
+
+    # ---------------------------
+    # 7. Validate Notebooks
+    # ---------------------------
+    - name: Execute Notebooks to ensure they run
+      run: |
+        for nb in notebooks/*.ipynb; do
+          echo "Running $nb"
+          jupyter nbconvert --to notebook --execute "$nb" --stdout > /dev/null
+        done
+
+    # ---------------------------
+    # 8. Upload Coverage Report
+    # ---------------------------
+    - name: Upload coverage to GitHub artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage.xml

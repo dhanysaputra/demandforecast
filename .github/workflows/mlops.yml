@@ -1,0 +1,101 @@
+name: MLOps Nightly Retraining Pipeline
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 2 * * *"  # nightly at 02:15 UTC (after Docker CI)
+
+jobs:
+  retrain:
+    name: Retrain Forecast Model
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+    # ---------------------------------------------------
+    # 1. Checkout Repository
+    # ---------------------------------------------------
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    # ---------------------------------------------------
+    # 2. Setup Python
+    # ---------------------------------------------------
+
+    - name: Setup Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install mlflow joblib
+
+    # ---------------------------------------------------
+    # 4. Run MLOps Training Pipeline
+    # ---------------------------------------------------
+
+    - name: Run nigtly retraining
+      run: |
+        python src/mlops/train_pipeline.py
+
+    # ---------------------------------------------------
+    # 5. Upload Artifacts (Models, Forecasts, Metrics)
+    # ---------------------------------------------------
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: nightly-artifacts
+        path: artifacts/
+
+    # ---------------------------------------------------
+    # 6. Upload MLflow Tracking Folder (Complete History)
+    # ---------------------------------------------------
+    - name: Upload MLflow tracking dir
+      uses: actions/upload-artifact@v3
+      with:
+        name: mlflow_runs
+        path: mlruns/
+        retention-days: 60
+
+    # ---------------------------------------------------
+    # 7. Fail CI If Drift Detected
+    # ---------------------------------------------------
+    - name: Drift gating / model quality check
+      run: |
+        echo "Checking drift in metrics..."
+        python - << 'PY'
+import json, pathlib, sys
+
+metrics_path = pathlib.Path("artifacts/metrics.json")
+if not metrics_path.exists():
+    print("⚠️ No metrics found — cannot evaluate drift.")
+    sys.exit(1)
+
+metrics = json.loads(metrics_path.read_text())
+if metrics.get("drift_flag"):
+    print("❌ DRIFT DETECTED:", metrics.get("reason"))
+    sys.exit(1)
+
+print("✅ No drift detected.")
+PY
+
+    # ---------------------------------------------------
+    # 8. Push Nightly Docker Image (Optional Future Stage)
+    # ---------------------------------------------------
+    # (Only runs on main)
+    - name: Build and push Docker image
+      if: github.ref == 'refs/heads/main'
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: ghcr.io/${{ github.repository }}/demandforecast:nightly
+        cache-from: type=registry,ref=ghcr.io/${{ github.repository }}/cache:latest
+        cache-to: type=registry,ref=ghcr.io/${{ github.repository }}/cache:latest,mode=max

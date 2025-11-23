@@ -1,0 +1,31 @@
+```gitignore
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data
+data/*.csv
+data/*.xlsx
+data/*.pkl
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# MLOPS
+artifacts/
+mlruns/
