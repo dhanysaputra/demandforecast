@@ -72,10 +72,8 @@ def hybrid_forecast(
 
     future_idx = xgb_future.index
     sba_future = future_sba.reindex(future_idx).values
-    hybrid_future = w * xgb_future.values + (1-w) * sba_future
-
     hybrid_future = pd.Series(
-        hybrid_vals,
+        w * xgb_future.values + (1 - w) * sba_future,
         index=future_idx,
         name="y_pred_hybrid",
     )
