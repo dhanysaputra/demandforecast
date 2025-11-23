@@ -71,20 +71,20 @@ jobs:
       run: |
         echo "Checking drift in metrics..."
         python - << 'PY'
-import json, pathlib, sys
+        import json, pathlib, sys
 
-metrics_path = pathlib.Path("artifacts/metrics.json")
-if not metrics_path.exists():
-    print("⚠️ No metrics found — cannot evaluate drift.")
-    sys.exit(1)
+        metrics_path = pathlib.Path("artifacts/metrics.json")
+        if not metrics_path.exists():
+            print("No metrics found — cannot evaluate drift.")
+            sys.exit(1)
 
-metrics = json.loads(metrics_path.read_text())
-if metrics.get("drift_flag"):
-    print("❌ DRIFT DETECTED:", metrics.get("reason"))
-    sys.exit(1)
+        metrics = json.loads(metrics_path.read_text())
+        if metrics.get("drift_flag"):
+            print("DRIFT DETECTED:", metrics.get("reason"))
+            sys.exit(1)
 
-print("✅ No drift detected.")
-PY
+        print("✅ No drift detected.")
+        PY
 
     # ---------------------------------------------------
     # 8. Push Nightly Docker Image (Optional Future Stage)
