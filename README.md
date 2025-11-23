@@ -23,7 +23,7 @@ This is not a toy example — it reflects a true implementation used for ERP-dri
 ---
 
 # Architecture Overview
-
+```scss
  ┌───────────────────┐
  │   Raw ERP Data    │  (Purchase Orders, Sales Orders)
  └─────────┬─────────┘
@@ -59,6 +59,7 @@ This is not a toy example — it reflects a true implementation used for ERP-dri
  │    MLflow Registry │
  │    Artifacts + UI  │
  └────────────────────┘
+```
 
 # Features
 
@@ -89,6 +90,8 @@ This is not a toy example — it reflects a true implementation used for ERP-dri
 ---
 
 # Repository Structure
+
+```powershell
 demandforecast/
 │
 ├── src/
@@ -142,14 +145,16 @@ demandforecast/
     │     ├── ci.yml
     │     ├── docker.yml
     │     └── mlops.yml
-
+```
 
 ---
 
 # End-To-End Pipeline
 
 The heart of the system lives here:
+```bash
 src/mlops/train_pipeline.py
+```
 
 Once per night, this job:
 - Loads latest historical data
@@ -168,8 +173,9 @@ Once per night, this job:
 # Testing
 
 Run all tests:
-
+```bash
 pytest -q
+```
 
 CI ensures:
 - model code is correct
@@ -182,14 +188,20 @@ CI ensures:
 
 # Docker Support
 Build image:
+```bash
 docker build -t demandforecast .
+```
 
 Run pipeline:
+```bash
 docker run demandforecast
+```
 
 
 Image published nightly to GHCR:
+```bash
 ghcr.io/dhanysaputra/demandforecast:nightly
+```
 
 ---
 
@@ -220,11 +232,12 @@ Ideal for products with Zero-demand months.
 
 Hybrid Model
 Automatically picks weighting:
-
+```bash
 if intermittent:
     w = 0.2 (XGB), 0.8 (Croston)
 else:
     w = 0.8 (XGB), 0.2 (Croston)
+```
 
 ---
 
