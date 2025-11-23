@@ -5,7 +5,7 @@ import numpy as np
 def reconstruct_demand(
     sales_df: pd.DataFrame,
     purchase_df: pd.DataFrame,
-    freq: str = "M",
+    freq: str = "ME",
     confirmed_only: bool = True,
 ):
     """

@@ -17,7 +17,7 @@ def croston_sba(ts: pd.Series, alpha: float = 0.1, h: int = 6):
         future_idx = pd.date_range(
             ts.index[-1] + pd.offsets.MonthEnd(1),
             periods=h,
-            freq="M",
+            freq="ME",
         )
         future = pd.Series(np.zeros(h), index=future_idx)
         return fitted, future
@@ -48,7 +48,7 @@ def croston_sba(ts: pd.Series, alpha: float = 0.1, h: int = 6):
     future_idx = pd.date_range(
         ts.index[-1] + pd.offsets.MonthEnd(1),
         periods=h,
-        freq="M",
+        freq="ME",
     )
     future_sba = np.repeat(fitted_sba[-1], h)
 

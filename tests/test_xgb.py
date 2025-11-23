@@ -3,7 +3,7 @@ from src.forecasting.xgb_model import train_xgb, forecast_xgb
 
 def test_xgb_training_and_forecast():
     # Synthetic monthly demand
-    idx = pd.date_range("2023-01-31", periods=12, freq="M")
+    idx = pd.date_range("2023-01-31", periods=12, freq="ME")
     demand_ts = pd.Series([10,12,15,13,14,16,18,17,19,21,20,22], index=idx)
 
     model, df_model, features = train_xgb(demand_ts)

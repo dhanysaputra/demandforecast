@@ -77,7 +77,8 @@ def forecast_xgb(
             **roll_state,
         }
 
-        y_pred = float(model.predict(pd.DataFrame([row_feat]))[0])
+        row_df = pd.DataFrame([[row_feat[f] for f in features]], columns=features)
+        y_pred = float(model.predict(row_df)[0])
         future_rows.append({"date": current_date, "y_pred_xgb": y_pred})
 
         history.append(y_pred)

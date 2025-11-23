@@ -2,7 +2,7 @@ import pandas as pd
 from src.forecasting.hybrid_forecast import hybrid_forecast
 
 def test_hybrid_forecast_output():
-    idx = pd.date_range("2023-01-31", periods=12, freq="M")
+    idx = pd.date_range("2023-01-31", periods=12, freq="ME")
     demand_ts = pd.Series([0,5,0,10,0,3,0,12,0,5,0,1], index=idx)
 
     future, debug = hybrid_forecast(demand_ts, steps=4)

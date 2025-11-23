@@ -38,7 +38,7 @@ def run_training_pipeline(
     # 3) Reconstruct demand
     # -------------------------------
     inv_df = reconstruct_demand(sales_df, purchase_df)
-    demand_ts = inv_df["true_demand_est"].asfreq("M")
+    demand_ts = inv_df["true_demand_est"].asfreq("ME")
 
     # -------------------------------
     # 4) Forecast (hybrid model)

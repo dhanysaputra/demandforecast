@@ -10,7 +10,7 @@ def main():
     sales_df, purchase_df = load_data()
 
     inv_df = reconstruct_demand(sales_df, purchase_df)
-    demand_ts = inv_df["true_demand_est"].asfreq("M")
+    demand_ts = inv_df["true_demand_est"].asfreq("ME")
 
     forecast_future, debug = hybrid_forecast(demand_ts, abc_class="A", steps=6, alpha=0.1)
 
