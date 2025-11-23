@@ -7,7 +7,7 @@ Includes hybrid intermittent-demand forecasting, inventory simulation, safety st
 
 # Overview
 
-This repository contains a production-grade demand forecasting system originally developed for a real manufacturing selling batteries and chargers & supply-chain setting:
+This repository contains a production-grade demand forecasting system originally developed for a real manufacturing & supply-chain setting:
 - Forecast demand for purchased & resold components
 - Handle intermittent / lumpy demand
 - Correct for stock-outs using inventory simulation
