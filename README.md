@@ -22,6 +22,11 @@ This is not a toy example — it reflects a true implementation used for ERP-dri
 
 ---
 
+# Example
+
+<p align="center"><img src="forecast.png" width="700"></p>
+<p align="center"><i>Figure: Demand forecast using hybrid model.</i></p>
+
 # Architecture Overview
 ```scss
  ┌───────────────────┐
