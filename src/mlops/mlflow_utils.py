@@ -3,11 +3,12 @@ import mlflow.sklearn
 import pandas as pd
 from pathlib import Path
 
+
 def start_mlflow_run(experiment_name="demand_forecasting", run_name="nightly_retrain"):
     """
     Starts or creates an MLflow experiment & run.
     """
-    mlflow.set_tracking_uri("file:./mlruns")  # local tracking folder
+    mlflow.set_tracking_uri("file:./mlruns")
     mlflow.set_experiment(experiment_name)
     return mlflow.start_run(run_name=run_name)
 
@@ -28,12 +29,14 @@ def log_artifact_file(path: str):
 
 def log_artifact_dataframe(df: pd.DataFrame, name: str):
     temp_path = Path("artifacts") / f"{name}.csv"
+    temp_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(temp_path)
     mlflow.log_artifact(str(temp_path))
 
 
 def log_artifact_series(series: pd.Series, name: str):
     temp_path = Path("artifacts") / f"{name}.csv"
+    temp_path.parent.mkdir(parents=True, exist_ok=True)
     series.to_csv(temp_path, header=True)
     mlflow.log_artifact(str(temp_path))
 

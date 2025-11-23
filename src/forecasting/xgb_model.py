@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 from xgboost import XGBRegressor
+
 from ..feature_engineering import make_time_features
+
 
 def train_xgb(
     demand_ts: pd.Series,
@@ -24,8 +26,8 @@ def train_xgb(
         )
 
     df_model = make_time_features(demand_ts, lags=lags, roll_windows=roll_windows)
-
     features = [c for c in df_model.columns if c not in ("date","y")]
+
     model = XGBRegressor(**model_kwargs)
     model.fit(df_model[features], df_model["y"])
 
@@ -44,18 +46,15 @@ def forecast_xgb(
     """
     last_row = df_model.iloc[-1].copy()
 
-    t = last_row["t"]
+    t = int(last_row["t"])
     current_date = last_row["date"]
 
-    # last 6 values for rolling updates
     history = list(df_model["y"].tail(6))
 
-    # get last lag values
-    lag_cols = [c for c in df_model.columns if c.startswith("lag")]
-    lags = [last_row[c] for c in lag_cols]
-    lags = lags[:3]  # lag1, lag2, lag3
+    lag1 = float(last_row["lag1"])
+    lag2 = float(last_row["lag2"])
+    lag3 = float(last_row["lag3"])
 
-    # rolling features
     roll_cols = [c for c in df_model.columns if c.startswith("rolling_")]
     roll_state = {c:last_row[c] for c in roll_cols}
 
@@ -71,17 +70,16 @@ def forecast_xgb(
         row_feat = {
             "t": t,
             "month": current_date.month,
-            "lag1": lags[0],
-            "lag2": lags[1],
-            "lag3": lags[2],
+            "lag1": lag1,
+            "lag2": lag2,
+            "lag3": lag3,
             "trend": trend,
+            **roll_state,
         }
-        row_feat.update(roll_state)
 
         y_pred = float(model.predict(pd.DataFrame([row_feat]))[0])
         future_rows.append({"date": current_date, "y_pred_xgb": y_pred})
 
-        # update rolling history
         history.append(y_pred)
         if len(history) > 6:
             history = history[-6:]
@@ -94,8 +92,9 @@ def forecast_xgb(
         roll_state["rolling_mean_6"] = np.mean(history)
         roll_state["rolling_std_6"]  = np.std(history)
 
-        # update lags
-        lags = [y_pred, lags[0], lags[1]]
+        lag3 = lag2
+        lag2 = lag1
+        lag1 = y_pred
 
     future_df = pd.DataFrame(future_rows).set_index("date")
     return future_df["y_pred_xgb"]

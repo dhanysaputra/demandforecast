@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
+
 from .reorder_point import reorder_point
+
 
 def simulate_inventory_with_rop(
     history_df: pd.DataFrame,
@@ -14,8 +16,6 @@ def simulate_inventory_with_rop(
 ):
     """
     Monthly inventory simulation with reorder point (ROP).
-
-    forecast_series should be monthly and indexed by month-end.
     """
     lead_time_periods = max(1, int(np.ceil(lead_time_days / review_period_days)))
     idx_future = forecast_series.index
@@ -51,18 +51,20 @@ def simulate_inventory_with_rop(
 
         pipeline.append(order_qty)
 
-        rows.append({
-            "date": dt,
-            "forecast_demand": demand,
-            "receipt": receipt,
-            "inv_start": inv_start,
-            "sales_served": sales_served,
-            "lost_sales": lost_sales,
-            "inv_end": inv_end,
-            "ROP": rop_val,
-            "recommended_order": order_qty,
-            "pipeline_open_orders": sum(pipeline),
-        })
+        rows.append(
+            {
+                "date": dt,
+                "forecast_demand": demand,
+                "receipt": receipt,
+                "inv_start": inv_start,
+                "sales_served": sales_served,
+                "lost_sales": lost_sales,
+                "inv_end": inv_end,
+                "ROP": rop_val,
+                "recommended_order": order_qty,
+                "pipeline_open_orders": sum(pipeline),
+            }
+        )
 
         inv = inv_end
 

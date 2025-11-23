@@ -1,14 +1,24 @@
 import numpy as np
 import pandas as pd
 
-def make_time_features(demand_ts: pd.Series, lags=(1,2,3), roll_windows=(3,6)):
+
+def make_time_features(
+    demand_ts: pd.Series,
+    lags=(1, 2, 3),
+    roll_windows=(3, 6),
+):
     """
     Create supervised learning features from a monthly demand series.
 
     Returns DataFrame with columns:
-      date, y, t, month, lagk, rolling_mean_w, rolling_std_w, rolling_min_w, rolling_max_w, trend
+      date, y, t, month, lagk, rolling_mean_w, rolling_std_w, rolling_min_3,
+      rolling_max_3, rolling_mean_6, rolling_std_6, trend
     """
-    df = demand_ts.to_frame(name="y").reset_index().rename(columns={"index":"date"})
+    df = (
+        demand_ts.to_frame(name="y")
+        .reset_index()
+        .rename(columns={"index": "date"})
+    )
     df["t"] = np.arange(len(df))
     df["month"] = df["date"].dt.month
 

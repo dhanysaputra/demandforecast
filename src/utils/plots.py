@@ -1,6 +1,13 @@
 import matplotlib.pyplot as plt
 
-def plot_history_and_forecast(inv_df, forecast_series, safety_stock=None, sim_df=None, title="Demand Forecast"):
+
+def plot_history_and_forecast(
+    inv_df,
+    forecast_series,
+    safety_stock=None,
+    sim_df=None,
+    title="Demand Forecast",
+):
     plt.figure(figsize=(16, 9))
 
     plt.plot(inv_df.index, inv_df["sales_observed"], label="Sales (Observed)", linewidth=2)
@@ -10,7 +17,13 @@ def plot_history_and_forecast(inv_df, forecast_series, safety_stock=None, sim_df
     plt.plot(forecast_series.index, forecast_series.values, label="Forecast", linewidth=2)
 
     if safety_stock is not None:
-        plt.plot(inv_df.index, [safety_stock]*len(inv_df), label="Safety Stock", linestyle=":", linewidth=2)
+        plt.plot(
+            inv_df.index,
+            [safety_stock] * len(inv_df),
+            label="Safety Stock",
+            linestyle=":",
+            linewidth=2,
+        )
 
     if sim_df is not None:
         plt.plot(sim_df.index, sim_df["inv_end"], label="Inventory (Simulated)", linestyle="--", linewidth=2)

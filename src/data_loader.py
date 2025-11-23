@@ -1,7 +1,9 @@
 import pandas as pd
 from pathlib import Path
 
+
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+
 
 def load_data(
     sales_path: str = None,

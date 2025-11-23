@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 def compute_safety_stock(
     inv_df: pd.DataFrame,
     lead_time_days: float,
@@ -11,17 +12,12 @@ def compute_safety_stock(
     """
     Safety stock:
       SS = Z * sqrt( sigma_d^2 * LT + mu_d^2 * sigma_LT^2 )
-
-    Here:
-      LT = lead_time_days (calendar)
-      sigma_LT estimated from tolerances if provided (uniform assumption).
     """
     demand = inv_df["true_demand_est"].astype(float)
 
     mu_d = demand.mean()
     sigma_d = demand.std()
 
-    # lead time variability from tolerances (uniform assumption)
     tol_span = tolerance_early_days + tolerance_late_days
     sigma_lt = (tol_span / np.sqrt(12)) if tol_span > 0 else 0.0
 

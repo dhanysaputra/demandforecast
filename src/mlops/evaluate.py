@@ -1,9 +1,11 @@
-import numpy as np
 import pandas as pd
 from pathlib import Path
+
 from src.utils.metrics import mape, mae
 
+
 ARTIFACT_DIR = Path("artifacts")
+
 
 def evaluate_forecast(y_true: pd.Series, y_pred: pd.Series):
     y_true, y_pred = y_true.align(y_pred, join="inner")
@@ -12,6 +14,7 @@ def evaluate_forecast(y_true: pd.Series, y_pred: pd.Series):
         "MAPE": float(mape(y_true, y_pred)),
         "n_points": int(len(y_true)),
     }
+
 
 def drift_check(new_metrics: dict, tolerance_pct: float = 25.0):
     """
@@ -22,6 +25,7 @@ def drift_check(new_metrics: dict, tolerance_pct: float = 25.0):
         return {"drift_flag": False, "reason": "no previous metrics"}
 
     import json
+
     prev = json.loads(prev_path.read_text())
 
     drift_flag = False
@@ -36,6 +40,7 @@ def drift_check(new_metrics: dict, tolerance_pct: float = 25.0):
                 reasons.append(f"{k} worsened by {change_pct:.1f}%")
 
     return {"drift_flag": drift_flag, "reason": "; ".join(reasons) or "ok"}
+
 
 def promote_metrics():
     """

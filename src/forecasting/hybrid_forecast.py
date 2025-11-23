@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
+
 from .xgb_model import train_xgb, forecast_xgb
 from .croston import croston_sba
+
 
 def classify_adi_cv2(ts: pd.Series):
     """
@@ -14,17 +16,17 @@ def classify_adi_cv2(ts: pd.Series):
     if len(nz) == 0:
         return {"ADI": np.inf, "CV2": np.inf, "class": "Z"}
 
-    ADI = len(y) / len(nz)
-    CV2 = (nz.std() / nz.mean())**2 if nz.mean() > 0 else np.inf
+    adi = len(y) / len(nz)
+    cv2 = (nz.std() / nz.mean()) ** 2 if nz.mean() > 0 else np.inf
 
-    if ADI < 1.32 and CV2 < 0.49:
+    if adi < 1.32 and cv2 < 0.49:
         klass = "X"
-    elif ADI < 1.32 and CV2 >= 0.49:
+    elif adi < 1.32 and cv2 >= 0.49:
         klass = "Y"
     else:
         klass = "Z"
 
-    return {"ADI": ADI, "CV2": CV2, "class": klass}
+    return {"ADI": adi, "CV2": cv2, "class": klass}
 
 
 def automatic_hybrid_weight(ts: pd.Series, abc_class: str = "A"):
@@ -61,22 +63,22 @@ def hybrid_forecast(
     Hybrid intermittent-demand forecast.
     Returns (full_pred, debug_dict)
     """
-    # XGB baseline
     xgb_model, df_model, features = train_xgb(demand_ts)
     xgb_future = forecast_xgb(xgb_model, df_model, features, steps=steps)
 
-    # Croston SBA
     fitted_sba, future_sba = croston_sba(demand_ts, alpha=alpha, h=steps)
 
-    # weight selection
     w, info = automatic_hybrid_weight(demand_ts, abc_class=abc_class)
 
-    # Align + blend future
     future_idx = xgb_future.index
     sba_future = future_sba.reindex(future_idx).values
     hybrid_future = w * xgb_future.values + (1-w) * sba_future
 
-    hybrid_future = pd.Series(hybrid_future, index=future_idx, name="y_pred_hybrid")
+    hybrid_future = pd.Series(
+        hybrid_vals,
+        index=future_idx,
+        name="y_pred_hybrid",
+    )
 
     debug = {
         "w": w,
