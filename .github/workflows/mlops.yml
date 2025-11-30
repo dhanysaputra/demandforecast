@@ -40,6 +40,12 @@ jobs:
     # 4. Run MLOps Training Pipeline
     # ---------------------------------------------------
 
+    - name: Set PYTHONPATH
+      run: echo "PYTHONPATH=$PWD" >> $GITHUB_ENV
+
+    - name: Run training pipeline
+      run: python src/mlops/train_pipeline.py
+
     - name: Run nigtly retraining
       run: |
         python src/mlops/train_pipeline.py
