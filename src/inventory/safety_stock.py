@@ -21,5 +21,5 @@ def compute_safety_stock(
     tol_span = tolerance_early_days + tolerance_late_days
     sigma_lt = (tol_span / np.sqrt(12)) if tol_span > 0 else 0.0
 
-    ss = z * np.sqrt((sigma_d ** 2) * lead_time_days + (mu_d ** 2) * (sigma_lt ** 2))
+    ss = z * np.sqrt((sigma_d**2) * lead_time_days + (mu_d**2) * (sigma_lt**2))
     return float(ss)

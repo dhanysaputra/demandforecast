@@ -10,8 +10,13 @@ from src.inventory.inventory_simulation import simulate_inventory_with_rop
 from src.mlops.evaluate import evaluate_forecast, drift_check, promote_metrics
 from src.mlops.persist import save_model, save_series, save_dataframe, save_metrics
 from src.mlops.mlflow_utils import (
-    start_mlflow_run, log_params, log_metrics, log_artifact_dataframe,
-    log_artifact_series, log_artifact_file, register_model
+    start_mlflow_run,
+    log_params,
+    log_metrics,
+    log_artifact_dataframe,
+    log_artifact_series,
+    log_artifact_file,
+    register_model,
 )
 
 
@@ -68,7 +73,9 @@ def run_training_pipeline(
     # -------------------------------
     # 6) Safety Stock
     # -------------------------------
-    ss = compute_safety_stock(inv_df, lead_time_days, tolerance_early_days, tolerance_late_days)
+    ss = compute_safety_stock(
+        inv_df, lead_time_days, tolerance_early_days, tolerance_late_days
+    )
 
     # -------------------------------
     # 7) Inventory simulation
@@ -84,13 +91,15 @@ def run_training_pipeline(
     save_metrics(full_metrics, "metrics.json")
 
     # MLflow logging
-    log_params({
-        "steps": steps,
-        "lead_time_days": lead_time_days,
-        "tolerance_early_days": tolerance_early_days,
-        "tolerance_late_days": tolerance_late_days,
-        "model_name": model_name
-    })
+    log_params(
+        {
+            "steps": steps,
+            "lead_time_days": lead_time_days,
+            "tolerance_early_days": tolerance_early_days,
+            "tolerance_late_days": tolerance_late_days,
+            "model_name": model_name,
+        }
+    )
     log_metrics(full_metrics)
 
     log_artifact_dataframe(inv_df, "inventory_history")

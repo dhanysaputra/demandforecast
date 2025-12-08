@@ -34,12 +34,7 @@ def train_xgb(
     return model, df_model, features
 
 
-def forecast_xgb(
-    model,
-    df_model: pd.DataFrame,
-    features: list,
-    steps: int = 6
-):
+def forecast_xgb(model, df_model: pd.DataFrame, features: list, steps: int = 6):
     """
     Autoregressive rollout for XGB models using last known features.
     Returns Series indexed by future month end.

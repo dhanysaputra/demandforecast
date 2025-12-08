@@ -21,7 +21,11 @@ def simulate_inventory_with_rop(
     idx_future = forecast_series.index
 
     if initial_inventory is None:
-        initial_inventory = float(history_df["inv_end"].iloc[-1]) if "inv_end" in history_df.columns else 0.0
+        initial_inventory = (
+            float(history_df["inv_end"].iloc[-1])
+            if "inv_end" in history_df.columns
+            else 0.0
+        )
 
     pipeline = [0.0] * lead_time_periods
     inv = initial_inventory

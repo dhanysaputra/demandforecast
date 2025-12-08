@@ -14,11 +14,7 @@ def make_time_features(
       date, y, t, month, lagk, rolling_mean_w, rolling_std_w, rolling_min_3,
       rolling_max_3, rolling_mean_6, rolling_std_6, trend
     """
-    df = (
-        demand_ts.to_frame(name="y")
-        .reset_index()
-        .rename(columns={"index": "date"})
-    )
+    df = demand_ts.to_frame(name="y").reset_index().rename(columns={"index": "date"})
     df["t"] = np.arange(len(df))
     df["month"] = df["date"].dt.month
 

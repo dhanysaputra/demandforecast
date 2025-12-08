@@ -29,18 +29,22 @@ def load_data(
     purchase_df.columns = [c.strip() for c in purchase_df.columns]
 
     # Standardize required names
-    sales_df = sales_df.rename(columns={
-        "DeliveryDate__c": "DeliveryDate",
-        "DeliveredQuantity__c": "DeliveredQuantity",
-    })
+    sales_df = sales_df.rename(
+        columns={
+            "DeliveryDate__c": "DeliveryDate",
+            "DeliveredQuantity__c": "DeliveredQuantity",
+        }
+    )
 
-    purchase_df = purchase_df.rename(columns={
-        "DeliveryDate__c": "DeliveryDate",
-        "DeliveredQuantity__c": "DeliveredQuantity",
-        "IsConfirmed__c": "IsConfirmed",
-        "RestQuantity__c": "RestQuantity",
-        "OrderedQuantity__c": "OrderedQuantity",
-    })
+    purchase_df = purchase_df.rename(
+        columns={
+            "DeliveryDate__c": "DeliveryDate",
+            "DeliveredQuantity__c": "DeliveredQuantity",
+            "IsConfirmed__c": "IsConfirmed",
+            "RestQuantity__c": "RestQuantity",
+            "OrderedQuantity__c": "OrderedQuantity",
+        }
+    )
 
     sales_df["DeliveryDate"] = pd.to_datetime(sales_df["DeliveryDate"])
     purchase_df["DeliveryDate"] = pd.to_datetime(purchase_df["DeliveryDate"])

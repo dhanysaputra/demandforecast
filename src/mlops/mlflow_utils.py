@@ -46,8 +46,7 @@ def register_model(model_name: str, run_id: str, artifact_path="model"):
     Register model in MLflow Model Registry.
     """
     result = mlflow.register_model(
-        model_uri=f"runs:/{run_id}/{artifact_path}",
-        name=model_name
+        model_uri=f"runs:/{run_id}/{artifact_path}", name=model_name
     )
     print(f"Registered model version: {result.version}")
     return result

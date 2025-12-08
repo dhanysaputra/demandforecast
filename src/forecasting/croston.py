@@ -52,4 +52,6 @@ def croston_sba(ts: pd.Series, alpha: float = 0.1, h: int = 6):
     )
     future_sba = np.repeat(fitted_sba[-1], h)
 
-    return pd.Series(fitted_sba, index=ts.index), pd.Series(future_sba, index=future_idx)
+    return pd.Series(fitted_sba, index=ts.index), pd.Series(
+        future_sba, index=future_idx
+    )
