@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 
 
 def reconstruct_demand(
@@ -16,7 +15,7 @@ def reconstruct_demand(
     df_p = purchase_df.copy()
 
     if confirmed_only and "IsConfirmed" in df_p.columns:
-        df_p = df_p[df_p["IsConfirmed"] == True]
+        df_p = df_p[df_p["IsConfirmed"]]
 
     if "RestQuantity" in df_p.columns and "OrderedQuantity" in df_p.columns:
         df_p = df_p[df_p["RestQuantity"] < df_p["OrderedQuantity"]]

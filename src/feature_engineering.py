@@ -27,7 +27,7 @@ def make_time_features(
 
     for w in roll_windows:
         df[f"rolling_mean_{w}"] = df["y"].rolling(w).mean().shift(1)
-        df[f"rolling_std_{w}"]  = df["y"].rolling(w).std().shift(1)
+        df[f"rolling_std_{w}"] = df["y"].rolling(w).std().shift(1)
 
     # always include short-window min/max for local spike cues
     df["rolling_min_3"] = df["y"].rolling(3).min().shift(1)

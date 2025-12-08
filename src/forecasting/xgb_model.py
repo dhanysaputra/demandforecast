@@ -8,8 +8,8 @@ from ..feature_engineering import make_time_features
 def train_xgb(
     demand_ts: pd.Series,
     model_kwargs: dict = None,
-    lags=(1,2,3),
-    roll_windows=(3,6),
+    lags=(1, 2, 3),
+    roll_windows=(3, 6),
 ):
     """
     Train XGBoost baseline forecaster on monthly demand.
@@ -26,7 +26,7 @@ def train_xgb(
         )
 
     df_model = make_time_features(demand_ts, lags=lags, roll_windows=roll_windows)
-    features = [c for c in df_model.columns if c not in ("date","y")]
+    features = [c for c in df_model.columns if c not in ("date", "y")]
 
     model = XGBRegressor(**model_kwargs)
     model.fit(df_model[features], df_model["y"])
@@ -56,7 +56,7 @@ def forecast_xgb(
     lag3 = float(last_row["lag3"])
 
     roll_cols = [c for c in df_model.columns if c.startswith("rolling_")]
-    roll_state = {c:last_row[c] for c in roll_cols}
+    roll_state = {c: last_row[c] for c in roll_cols}
 
     trend = last_row["trend"]
 
@@ -87,11 +87,11 @@ def forecast_xgb(
 
         last3 = history[-3:]
         roll_state["rolling_mean_3"] = np.mean(last3)
-        roll_state["rolling_std_3"]  = np.std(last3)
-        roll_state["rolling_min_3"]  = np.min(last3)
-        roll_state["rolling_max_3"]  = np.max(last3)
+        roll_state["rolling_std_3"] = np.std(last3)
+        roll_state["rolling_min_3"] = np.min(last3)
+        roll_state["rolling_max_3"] = np.max(last3)
         roll_state["rolling_mean_6"] = np.mean(history)
-        roll_state["rolling_std_6"]  = np.std(history)
+        roll_state["rolling_std_6"] = np.std(history)
 
         lag3 = lag2
         lag2 = lag1

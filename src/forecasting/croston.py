@@ -35,8 +35,8 @@ def croston_sba(ts: pd.Series, alpha: float = 0.1, h: int = 6):
     for t in range(first + 1, n):
         if y[t] > 0:
             interval = t - last_demand_idx
-            q[t] = alpha * y[t] + (1-alpha) * q[last_demand_idx]
-            a[t] = alpha * interval + (1-alpha) * a[last_demand_idx]
+            q[t] = alpha * y[t] + (1 - alpha) * q[last_demand_idx]
+            a[t] = alpha * interval + (1 - alpha) * a[last_demand_idx]
             last_demand_idx = t
         else:
             q[t] = q[last_demand_idx]
@@ -44,7 +44,7 @@ def croston_sba(ts: pd.Series, alpha: float = 0.1, h: int = 6):
 
         f[t] = (q[t] / a[t]) if a[t] > 0 else 0.0
 
-    fitted_sba = (1 - alpha/2) * f
+    fitted_sba = (1 - alpha / 2) * f
     future_idx = pd.date_range(
         ts.index[-1] + pd.offsets.MonthEnd(1),
         periods=h,

@@ -14,6 +14,7 @@ from src.mlops.mlflow_utils import (
     log_artifact_series, log_artifact_file, register_model
 )
 
+
 def run_training_pipeline(
     model_name="charger_demand_forecast",
     steps=6,
