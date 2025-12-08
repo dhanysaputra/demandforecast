@@ -15,9 +15,7 @@ venv/
 .ipynb_checkpoints/
 
 # Data
-data/*.csv
 data/*.xlsx
-data/*.pkl
 
 # OS
 .DS_Store
