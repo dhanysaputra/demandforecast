@@ -3,7 +3,6 @@ from pathlib import Path
 
 from src.utils.metrics import mape, mae
 
-
 ARTIFACT_DIR = Path("artifacts")
 
 

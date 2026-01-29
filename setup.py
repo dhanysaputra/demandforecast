@@ -11,7 +11,7 @@ setup(
         "matplotlib",
         "scikit-learn",
         "xgboost",
-        "statsmodels"
+        "statsmodels",
     ],
     author="Dhany Saputra",
     description="Hybrid demand forecasting and inventory optimization system.",
